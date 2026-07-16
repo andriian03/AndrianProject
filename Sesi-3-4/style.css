@@ -27,7 +27,7 @@ body{
     color: #ffffff;
 }
 
-.btn-orange:hover {
+.btn-blue:hover {
     background-color: #e65c00; /* Darker shade of primary color */
     border-color: #e65c00; /* Darker shade of primary color */
     color: #ffffff;

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunia Sublim - Industrial Textile Printing</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts (Poppins & Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-lg">
+        <div class="container">
+            <!-- Brand Logo Terlampir -->
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+                <img src="Images/LOGO DS NEON BOX.png" alt="Dunia Sublim Logo">
+                <div class="d-none d-sm-block">
+                    <span class="d-block fw-bold fs-5 text-white mb-0" style="line-height: 1;">DUNIA SUBLIM</span>
+                    <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 1px;">INDUSTRIAL TEXTILE PRINTING</small>
+                </div>
+            </a>
+            
+            <!-- Cart Button di Kanan Atas -->
+            <button class="btn cart-btn ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer" aria-controls="cartDrawer">
+                <i class="bi bi-cart3 fs-5 me-1"></i>
+                <span class="d-none d-md-inline">Keranjang</span>
+                <span class="cart-badge" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <div class="container my-4">
+        
+        <!-- Banner Promosi Singkat -->
+        <div class="hero-banner mb-5 shadow-sm">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <span class="badge bg-danger mb-2 text-uppercase tracking-wider">Premium Sublimation Catalog</span>
+                    <h2 class="fw-bold mb-2 text-white">Konveksi & Printing Tekstil Desain Custom</h2>
+                    <p class="text-white-50 mb-0">Temukan koleksi pakaian bermutu tinggi dengan hasil cetakan tajam, cerah, tahan lama, dan berstandar pabrikasi modern.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- Sidebar Filter Kiri -->
+            <div class="col-lg-3">
+                <div class="filter-sidebar shadow-sm sticky-lg-top" style="top: 100px; z-index: 10;">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-sliders2-vertical text-warning me-2"></i>Filter Produk</span>
+                        <button class="btn btn-sm btn-light text-muted d-lg-none" id="closeFilterBtn">Tutup</button>
+                    </h5>
+                    
+                    <!-- Pencarian Nama Produk -->
+                    <div class="mb-4">
+                        <label for="searchName" class="form-label fw-bold text-muted small text-uppercase">Cari Produk</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                            <input type="text" id="searchName" class="form-control border-start-0 ps-0" placeholder="Ketik nama produk...">
+                        </div>
+                    </div>
+
+                    <!-- Filter Berdasarkan Kategori Baru -->
+                    <div class="mb-4">
+                        <label for="filterCategory" class="form-label fw-bold text-muted small text-uppercase">Kategori Pakaian</label>
+                        <select id="filterCategory" class="form-select">
+                            <option value="all">Semua Kategori</option>
+                            <option value="Kemeja">Kemeja</option>
+                            <option value="Jersey">Jersey</option>
+                            <option value="Hijab">Hijab</option>
+                            <option value="Gamis">Gamis</option>
+                            <option value="Tunik">Tunik</option>
+                            <option value="Sarung">Sarung</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Urutan Harga -->
+                    <div class="mb-3">
+                        <label for="sortPrice" class="form-label fw-bold text-muted small text-uppercase">Urutkan Harga</label>
+                        <select id="sortPrice" class="form-select">
+                            <option value="default">Rekomendasi Utama</option>
+                            <option value="low-high">Harga: Rendah ke Tinggi</option>
+                            <option value="high-low">Harga: Tinggi ke Rendah</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area Grid Produk -->
+            <div class="col-lg-9">
+                <!-- Info Status Pencarian -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="text-muted mb-0">Menampilkan <span id="productCount" class="fw-bold text-dark">0</span> produk pilihan terbaik</p>
+                </div>
+
+                <!-- Grid Rendering -->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="productGrid">
+                    <!-- Dynamic rendering oleh JavaScript (50 Produk) -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Offcanvas / Sidebar Keranjang Belanja -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer" aria-labelledby="cartDrawerLabel">
+        <div class="offcanvas-header py-3">
+            <h5 class="offcanvas-title fw-bold" id="cartDrawerLabel"><i class="bi bi-cart-check-fill text-warning me-2"></i>Keranjang Belanja</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <!-- Daftar Produk Keranjang -->
+            <div class="flex-grow-1 overflow-y-auto" id="cartItemsList">
+                <!-- Diisi Dinamis oleh JavaScript -->
+            </div>
+            
+            <!-- Ringkasan Total & Tombol Order WA -->
+            <div class="border-top pt-4 mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted fw-semibold">Total Belanja:</span>
+                    <h4 class="text-primary fw-bold mb-0" id="cartTotalPrice">Rp 0</h4>
+                </div>
+                <button class="btn btn-ds-primary w-100 py-3" onclick="checkoutWA()">
+                    <i class="bi bi-whatsapp me-2"></i>Kirim Pesanan Via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification (Popup Berhasil Ditambah ke Keranjang) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Produk telah ditambahkan ke keranjang!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- App JavaScript Logic -->
+    <script>
+        // 1. DATA GENERATOR (50 PRODUK BERDASARKAN KATEGORI PERMINTAAN USER)
+        const categories = ["Kemeja", "Jersey", "Hijab", "Gamis", "Tunik", "Sarung"];
+        const products = [];
+
+        // Daftar Gambar Produk Unsplash yang Relevan untuk Menjaga Tampilan Estetis
+        const unsplashImages = {
+            "Kemeja": "https://images.unsplash.com/photo-1620012253295-c05518e993be?w=500&auto=format&fit=crop&q=60",
+            "Jersey": "https://images.unsplash.com/photo-1542435503-956c469947f6?w=500&auto=format&fit=crop&q=60",
+            "Hijab": "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=500&auto=format&fit=crop&q=60",
+            "Gamis": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
+            "Tunik": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60",
+            "Sarung": "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=500&auto=format&fit=crop&q=60"
+        };
+
+        // Skema Harga & Penamaan Realistis
+        for (let i = 1; i <= 50; i++) {
+            const category = categories[(i - 1) % categories.length];
+            let name = "";
+            let price = 0;
+
+            if (category === "Kemeja") {
+                name = `Kemeja Sublim Fullprint Series ${i}`;
+                price = 145000 + (i * 1200);
+            } else if (category === "Jersey") {
+                name = `Jersey Olahraga Custom Sublim-${i}`;
+                price = 110000 + (i * 1500);
+            } else if (category === "Hijab") {
+                name = `Hijab Voal Motif Laser Cut ${i}`;
+                price = 55000 + (i * 800);
+            } else if (category === "Gamis") {
+                name = `Gamis Premium Printing Pattern ${i}`;
+                price = 220000 + (i * 2000);
+            } else if (category === "Tunik") {
+                name = `Tunik Sublim Motif Eksklusif ${i}`;
+                price = 125000 + (i * 1100);
+            } else if (category === "Sarung") {
+                name = `Sarung Batik Printing Sublim Modern ${i}`;
+                price = 85000 + (i * 1300);
+            }
+
+            products.push({
+                id: i,
+                name: name,
+                price: price,
+                description: `Produk premium edisi ${category} Dunia Sublim diproduksi dengan bahan katun dan polyester khusus yang adem serta diproses menggunakan mesin printing berteknologi tinggi untuk hasil cetakan maksimal.`,
+                kategori: category,
+                image: unsplashImages[category]
+            });
+        }
+
+        // 2. STATE MANAGER (KERANJANG BELANJA)
+        let cart = [];
+
+        // DOM Elements
+        const productGrid = document.getElementById('productGrid');
+        const productCount = document.getElementById('productCount');
+        const searchInput = document.getElementById('searchName');
+        const categorySelect = document.getElementById('filterCategory');
+        const sortSelect = document.getElementById('sortPrice');
+        const cartCount = document.getElementById('cartCount');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartTotalPrice = document.getElementById('cartTotalPrice');
+
+        // Fungsi Memformat Nilai IDR
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+
+        // Loop Rendering Katalog Produk Utama
+        function renderProducts(filteredProducts) {
+            productGrid.innerHTML = "";
+            productCount.textContent = filteredProducts.length;
+
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-search-heart text-muted display-3"></i>
+                        <p class="mt-3 text-muted">Produk "${searchInput.value}" tidak ditemukan. Silakan ganti kata kunci.</p>
+                    </div>`;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const productHTML = `
+                    <div class="col">
+                        <div class="card product-card">
+                            <div class="img-container">
+                                <span class="badge-category">${product.kategori}</span>
+                                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                            </div>
+                            <div class="card-body d-flex flex-column p-4">
+                                <h6 class="card-title fw-bold text-dark text-truncate mb-2" title="${product.name}">${product.name}</h6>
+                                <p class="card-text text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px;">
+                                    ${product.description}
+                                </p>
+                                <div class="mt-auto pt-2">
+                                    <h5 class="fw-bold text-primary mb-3">${formatRupiah(product.price)}</h5>
+                                    <button class="btn btn-ds-primary w-100 py-2 btn-sm" onclick="addToCart(${product.id})">
+                                        <i class="bi bi-cart-plus me-1"></i>Masukkan Keranjang
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productGrid.innerHTML += productHTML;
+            });
+        }
+
+        // Fungsi Filter Gabungan & Pengurutan Harga
+        function filterAndSortProducts() {
+            const searchKeyword = searchInput.value.toLowerCase();
+            const selectedCategory = categorySelect.value;
+            const selectedSort = sortSelect.value;
+
+            let result = products.filter(product => {
+                const matchName = product.name.toLowerCase().includes(searchKeyword);
+                const matchCategory = (selectedCategory === "all") || (product.kategori === selectedCategory);
+                return matchName && matchCategory;
+            });
+
+            if (selectedSort === "low-high") {
+                result.sort((a, b) => a.price - b.price);
+            } else if (selectedSort === "high-low") {
+                result.sort((a, b) => b.price - a.price);
+            }
+
+            renderProducts(result);
+        }
+
+        // Tambah ke Keranjang
+        window.addToCart = function(id) {
+            const product = products.find(p => p.id === id);
+            const exists = cart.find(item => item.id === id);
+
+            if (exists) {
+                exists.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            // Tampilkan Toast Sukses
+            const toastElement = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+
+            updateCartUI();
+        }
+
+        // Ubah Kuantitas Item Keranjang
+        window.changeQty = function(id, change) {
+            const item = cart.find(p => p.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(p => p.id !== id);
+                }
+                updateCartUI();
+            }
+        }
+
+        // Perbarui User Interface Keranjang Belanja
+        function updateCartUI() {
+            // Perbarui Badge di Navbar
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            // Render Daftar Item Keranjang
+            cartItemsList.innerHTML = "";
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x text-muted display-4"></i>
+                        <p class="mt-2 text-muted">Keranjang Anda masih kosong.</p>
+                    </div>`;
+                cartTotalPrice.textContent = "Rp 0";
+                return;
+            }
+
+            cart.forEach(item => {
+                totalPrice += (item.price * item.quantity);
+                const cartItemHTML = `
+                    <div class="d-flex gap-3 align-items-center mb-4 p-2 border-bottom">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                        <div class="flex-grow-1 min-w-0">
+                            <h6 class="text-dark fw-bold mb-1 text-truncate">${item.name}</h6>
+                            <small class="text-muted d-block mb-1">${formatRupiah(item.price)}</small>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="changeQty(${item.id}, -1)">-</button>
+                                <span class="fw-bold">${item.quantity}</span>
+                                <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="changeQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                cartItemsList.innerHTML += cartItemHTML;
+            });
+
+            cartTotalPrice.textContent = formatRupiah(totalPrice);
+        }
+
+        // Integrasi Link WhatsApp API untuk Checkout
+        window.checkoutWA = function() {
+            if (cart.length === 0) {
+                alert("Keranjang belanja Anda masih kosong!");
+                return;
+            }
+
+            let message = "*PESANAN BARU - DUNIA SUBLIM*\n\nHalo Admin Dunia Sublim, saya ingin memesan produk-produk berikut:\n\n";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                message += `${index + 1}. *${item.name}*\n   Kategori: ${item.kategori}\n   Qty: ${item.quantity} x ${formatRupiah(item.price)} = *${formatRupiah(subtotal)}*\n\n`;
+            });
+
+            message += `--------------------------------------\n`;
+            message += `*Total Pembayaran: ${formatRupiah(total)}*\n\nMohon informasi selanjutnya untuk proses pengiriman dan pembayaran. Terima kasih!`;
+
+            const encodedText = encodeURIComponent(message);
+            const waNumber = "6281234567890"; // Ganti dengan nomor WhatsApp aktif Dunia Sublim Anda
+            window.open(`https://api.whatsapp.com/send?phone=${waNumber}&text=${encodedText}`, '_blank');
+        }
+
+        // Event Listener Interaksi Filter
+        searchInput.addEventListener('input', filterAndSortProducts);
+        categorySelect.addEventListener('change', filterAndSortProducts);
+        sortSelect.addEventListener('change', filterAndSortProducts);
+
+        // Render Inisiasi Awal Catalog
+        renderProducts(products);
+    </script>
+</body>
+</html>
