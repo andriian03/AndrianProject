@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Portofolio Klasik Modern</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- MASTER CONTAINER -->
+    <div class="master-container" id="header">
+        
+        <!-- SECTION 1: NAVBAR -->
+        <header class="navbar section-padding">
+            <!-- Brand / Logo -->
+            <div class="brand">Brand</div>
+            
+            <!-- Navigasi Menu -->
+            <nav class="nav-links">
+                <a href="#header">Header</a>
+                <a href="#biodata">Biodata</a>
+                <a href="#portofolio">Portofolio</a>
+            </nav>
+        </header>
+
+        <!-- PEMBATAS (DIVIDER) -->
+        <div class="divider"></div>
+
+        <!-- SECTION 2: HERO HEADER -->
+        <section class="hero section-padding">
+            <!-- Kolom Teks -->
+            <div class="hero-text">
+                <h1>Selamat Datang di Website Saya</h1>
+                <p>Ini adalah contoh header dengan dua kolom. Kolom kiri berisi teks deskripsi yang responsif menyesuaikan ukuran layar perangkat Anda.</p>
+                <!-- Tombol Modern -->
+                <button class="btn" type="button" onclick="location.href='#biodata'">Pelajari Lebih Lanjut</button>
+            </div>
+            
+            <!-- Kolom Gambar -->
+            <div class="hero-image">
+                <!-- Ditambahkan fallback gambar unspash berkualitas jika file lokal tidak ditemukan -->
+                <img src="soccer-worldcup-civ-nor-1782841506528_169.jpeg" 
+                     alt="Gambar Representasi" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop';">
+            </div>
+        </section>
+
+        <!-- PEMBATAS (DIVIDER) -->
+        <div class="divider"></div>
+
+        <!-- SECTION 3: BIODATA (ABOUT ME) -->
+        <section id="biodata" class="biodata section-padding">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <div class="subtitle">A brief introduction about myself</div>
+            </div>
+
+            <!-- Grid 6 Box Biodata -->
+            <div class="bio-grid">
+                <div class="bio-card">Full Name</div>
+                <div class="bio-card">Education</div>
+                <div class="bio-card">Pekerjaan</div>
+                <div class="bio-card">Contact</div>
+                <div class="bio-card">Hobi</div>
+                <div class="bio-card">Alamat</div>
+            </div>
+        </section>
+
+        <!-- PEMBATAS (DIVIDER) -->
+        <div class="divider"></div>
+
+        <!-- SECTION 4: PORTOFOLIO -->
+        <section id="portofolio" class="portfolio section-padding">
+            <div class="section-header">
+                <h2>Portofolio</h2>
+            </div>
+
+            <!-- Daftar Grid Portofolio -->
+            <div class="portfolio-grid">
+                
+                <!-- Proyek 1 -->
+                <div class="project-card">
+                    <div class="project-img-wrapper">
+                        <!-- SVG Gambar Representasi 350x200 -->
+                        <svg viewBox="0 0 350 200" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#dddddd" />
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#777777">350 &times; 200</text>
+                        </svg>
+                    </div>
+                    <div class="project-info">
+                        <h3>Proyek 1</h3>
+                        <p>Deskripsi proyek 1.</p>
+                    </div>
+                </div>
+
+                <!-- Proyek 2 -->
+                <div class="project-card">
+                    <div class="project-img-wrapper">
+                        <!-- SVG Gambar Representasi 350x200 -->
+                        <svg viewBox="0 0 350 200" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#dddddd" />
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#777777">350 &times; 200</text>
+                        </svg>
+                    </div>
+                    <div class="project-info">
+                        <h3>Proyek 2</h3>
+                        <p>Deskripsi proyek 2.</p>
+                    </div>
+                </div>
+
+                <!-- Proyek 3 -->
+                <div class="project-card">
+                    <div class="project-img-wrapper">
+                        <!-- SVG Gambar Representasi 350x200 -->
+                        <svg viewBox="0 0 350 200" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#dddddd" />
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#777777">350 &times; 200</text>
+                        </svg>
+                    </div>
+                    <div class="project-info">
+                        <h3>Proyek 3</h3>
+                        <p>Deskripsi proyek 3.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

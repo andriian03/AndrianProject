@@ -1,0 +1,60 @@
+:root {
+    --primary-color: #FD6F00;
+    --secondary-color: #000000;
+    --font-family: "Poppins", sans-serif;
+    --font-size: 18px;
+    --font-weight: 400;
+}
+
+body{
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    color: var(--secondary-color);
+}
+
+.bg-orange {
+    background-color: var(--primary-color);
+}
+
+.text-orange {
+    color: var(--primary-color);
+}
+
+.btn-orange {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-orange:hover {
+    background-color: #e65c00; /* Darker shade of primary color */
+    border-color: #e65c00; /* Darker shade of primary color */
+    color: #ffffff;
+}
+.nav-link{
+    font-size: 21px;
+    padding-left: 12px!important;
+    padding-right: 12px!important;
+}
+
+header{
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+section {
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+section h2 {
+    font-size: 65px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    section h2 {
+        font-size: 45px;
+    }
+}
