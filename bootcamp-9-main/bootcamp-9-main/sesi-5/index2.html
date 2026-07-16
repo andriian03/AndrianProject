@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokoKita - Katalog Belanja Modern</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            background: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+        }
+        .product-img-wrapper {
+            position: relative;
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            background-color: #f1f3f5;
+            overflow: hidden;
+        }
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.08);
+        }
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1e3c72;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-sidebar {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 20px;
+        }
+        .toast-container-custom {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+        .nav-cart-badge {
+            font-size: 0.7rem;
+            position: absolute;
+            top: -2px;
+            right: -2px;
+        }
+        .price-text {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <i class="bi bi-bag-heart-fill text-warning me-2 fs-3"></i>
+                <span>TokoKita</span>
+            </a>
+            <div class="d-flex ms-auto align-items-center">
+                <!-- Cart Button -->
+                <button class="btn btn-outline-light position-relative rounded-pill px-3 py-2" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <i class="bi bi-cart3 fs-5 me-1"></i>
+                    <span class="d-none d-sm-inline">Keranjang</span>
+                    <span id="cartCountBadge" class="position-absolute bg-warning text-dark rounded-circle px-2 py-0.5 fw-bold nav-cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Hero Section -->
+        <div class="hero-section text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-3">Selamat Datang di TokoKita!</h1>
+                    <p class="lead mb-4">Temukan barang berkualitas terbaik dari berbagai kategori dengan harga paling terjangkau.</p>
+                    <a href="#katalog" class="btn btn-warning btn-lg fw-semibold px-4 rounded-pill shadow">Mulai Belanja</a>
+                </div>
+                <div class="col-md-4 d-none d-md-block text-center">
+                    <i class="bi bi-shop text-white opacity-25" style="font-size: 10rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Catalog Section -->
+        <div class="row" id="katalog">
+            <!-- Sidebar Filter -->
+            <div class="col-lg-3 mb-4">
+                <div class="filter-sidebar">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center">
+                        <i class="bi bi-sliders me-2 text-primary"></i> Filter Produk
+                    </h5>
+                    <hr>
+                    
+                    <!-- Search Input -->
+                    <div class="mb-4">
+                        <label for="searchInput" class="form-label fw-semibold">Cari Nama Produk</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="searchInput" class="form-control bg-light border-start-0" placeholder="Ketik kata kunci...">
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Kategori</label>
+                        <select id="categoryFilter" class="form-select bg-light">
+                            <option value="all">Semua Kategori</option>
+                            <option value="Elektronik">Elektronik</option>
+                            <option value="Pakaian">Pakaian</option>
+                            <option value="Sepatu">Sepatu</option>
+                            <option value="Aksesoris">Aksesoris</option>
+                            <option value="Peralatan Rumah">Peralatan Rumah</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Filter -->
+                    <div class="mb-4">
+                        <label for="priceRange" class="form-label fw-semibold d-flex justify-content-between">
+                            <span>Maks. Harga:</span>
+                            <span id="priceRangeValue" class="text-primary fw-bold">Rp 15.000.000</span>
+                        </label>
+                        <input type="range" class="form-range" id="priceRange" min="50000" max="15000000" step="50000" value="15000000">
+                        <div class="d-flex justify-content-between text-muted" style="font-size: 0.8rem;">
+                            <span>Rp 50k</span>
+                            <span>Rp 15jt</span>
+                        </div>
+                    </div>
+
+                    <!-- Sort Filter -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Urutkan Harga</label>
+                        <select id="sortFilter" class="form-select bg-light">
+                            <option value="none">Bawaan</option>
+                            <option value="low-to-high">Termurah ke Termahal</option>
+                            <option value="high-to-low">Termahal ke Termurah</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <button id="btnResetFilters" class="btn btn-outline-danger w-full w-100 rounded-pill mt-2">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset Filter
+                    </button>
+                </div>
+            </div>
+
+            <!-- Products Grid Column -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <h4 class="fw-bold m-0 text-dark">
+                        Katalog Produk (<span id="productCounter">0</span>)
+                    </h4>
+                    <span class="badge bg-secondary p-2 rounded-3" id="activeFiltersLabel">Menampilkan Semua Produk</span>
+                </div>
+
+                <!-- Products Display Area -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productsGrid">
+                    <!-- Javascript will inject products here dynamically -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-5 d-none">
+                    <i class="bi bi-search-heart text-muted display-1"></i>
+                    <h5 class="mt-3 fw-bold">Produk Tidak Ditemukan</h5>
+                    <p class="text-muted">Cobalah mengubah kata kunci pencarian atau mengatur ulang filter Anda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold" id="cartModalLabel">
+                        <i class="bi bi-cart3 me-2"></i>Keranjang Belanja Anda
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="cartItemsList" class="d-flex flex-column gap-3">
+                        <!-- Javascript will inject cart items here -->
+                    </div>
+                    <div id="emptyCartState" class="text-center py-5">
+                        <i class="bi bi-cart-x text-muted display-2"></i>
+                        <h5 class="mt-3 fw-bold">Keranjang Anda Kosong</h5>
+                        <p class="text-muted">Silakan tambahkan beberapa barang dari katalog kami.</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light d-flex justify-content-between p-3 border-top">
+                    <div>
+                        <h6 class="text-muted mb-1">Total Belanja:</h6>
+                        <h4 class="fw-bold text-success m-0" id="cartTotalPrice">Rp 0</h4>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 me-2" data-bs-dismiss="modal">Lanjut Belanja</button>
+                        <button type="button" id="btnCheckout" class="btn btn-primary rounded-pill px-4 shadow">Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Area -->
+    <div class="toast-container-custom">
+        <div id="cartToast" class="toast align-items-center text-white bg-success border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i> Produk berhasil ditambahkan ke keranjang!
+                </div>
+                <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        <div id="checkoutToast" class="toast align-items-center text-white bg-primary border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-bag-check-fill me-2"></i> Terima kasih! Pesanan Anda sedang kami proses.
+                </div>
+                <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5 border-top border-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-bag-heart-fill text-warning me-2 fs-3"></i>
+                        <span class="fs-4 fw-bold">TokoKita</span>
+                    </div>
+                    <p class="text-muted">Menyediakan berbagai macam kebutuhan sehari-hari Anda dengan harga murah dan pengiriman super cepat di seluruh Indonesia.</p>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3 text-warning">Kategori Utama</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li>Elektronik & Gadget</li>
+                        <li>Pakaian & Mode</li>
+                        <li>Koleksi Sepatu</li>
+                        <li>Aksesoris Eksklusif</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3 text-warning">Hubungi Kami</h5>
+                    <p class="text-muted mb-1"><i class="bi bi-geo-alt-fill me-2"></i> Jakarta, Indonesia</p>
+                    <p class="text-muted mb-1"><i class="bi bi-envelope-fill me-2"></i> support@tokokita.id</p>
+                    <p class="text-muted"><i class="bi bi-phone-fill me-2"></i> +62 812-3456-789</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center text-muted">
+                <small>&copy; 2026 TokoKita. Hak Cipta Dilindungi Undang-Undang.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Data 50 Produk Indonesia Realistis
+        const products = [
+            // ELEKTRONIK (10)
+            { id: 1, name: "Smartphone Prime X1", price: 5499000, description: "Layar AMOLED 120Hz, RAM 8GB, Penyimpanan 256GB dengan kamera 108MP.", category: "Elektronik", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, name: "Smart TV Ultra HD 43 Inch", price: 3850000, description: "Pengalaman bioskop di rumah dengan resolusi 4K tajam dan sistem operasi Google TV.", category: "Elektronik", image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, name: "Laptop Kerja Lite 14", price: 7200000, description: "Prosesor Intel Core i5 Gen-12, ringan hanya 1.2kg dengan baterai tahan 10 jam.", category: "Elektronik", image: "https://images.unsplash.com/photo-1496181130204-755241544e35?w=500&auto=format&fit=crop&q=60" },
+            { id: 4, name: "TWS Wireless Audio Pro", price: 450000, description: "Dilengkapi fitur Active Noise Cancelling (ANC) dan bass yang super dalam.", category: "Elektronik", image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60" },
+            { id: 5, name: "Smartwatch Active Band", price: 890000, description: "Monitor detak jantung, kadar oksigen dalam darah, dan 50+ mode olahraga.", category: "Elektronik", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60" },
+            { id: 6, name: "Tablet Belajar 10.1", price: 2150000, description: "Sangat cocok untuk belajar anak atau hiburan keluarga dengan layar proteksi mata.", category: "Elektronik", image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&auto=format&fit=crop&q=60" },
+            { id: 7, name: "Keyboard Mechanical RGB", price: 650000, description: "Menggunakan Blue Switch premium untuk kenyamanan mengetik maksimal.", category: "Elektronik", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&auto=format&fit=crop&q=60" },
+            { id: 8, name: "Mouse Gaming Pro Precision", price: 320000, description: "DPI dinamis hingga 12000 dengan tombol macro yang dapat diatur ulang.", category: "Elektronik", image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500&auto=format&fit=crop&q=60" },
+            { id: 9, name: "Powerbank Turbo Charge 20K", price: 299000, description: "Kapasitas besar 20.000 mAh didukung pengisian cepat dua arah PD 22.5W.", category: "Elektronik", image: "https://images.unsplash.com/photo-1609592424089-9a779be75262?w=500&auto=format&fit=crop&q=60" },
+            { id: 10, name: "Speaker Bluetooth Portabel", price: 540000, description: "Desain tahan air IPX7 yang menghasilkan suara jernih hingga 12 jam pemakaian.", category: "Elektronik", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60" },
+
+            // PAKAIAN (10)
+            { id: 11, name: "Kaos Polo Premium Katun", price: 175000, description: "Bahan katun piqué dingin dan nyaman dipakai untuk aktivitas kasual harian.", category: "Pakaian", image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&auto=format&fit=crop&q=60" },
+            { id: 12, name: "Jaket Bomber Canvas Navy", price: 299000, description: "Model trendi bergaya militer modern dengan kantong ekstra di bagian dalam.", category: "Pakaian", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&auto=format&fit=crop&q=60" },
+            { id: 13, name: "Kemeja Flanel Vintage Red", price: 210000, description: "Flanel lembut bermotif kotak-kotak klasik yang tidak lekang oleh waktu.", category: "Pakaian", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500&auto=format&fit=crop&q=60" },
+            { id: 14, name: "Celana Chino Slim Fit", price: 245000, description: "Celana chino stretchable yang fleksibel untuk santai maupun suasana semi-formal.", category: "Pakaian", image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&auto=format&fit=crop&q=60" },
+            { id: 15, name: "Hoodie Oversize Cozy Black", price: 280000, description: "Katun fleece tebal dan lembut yang menghangatkan di segala kondisi.", category: "Pakaian", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&auto=format&fit=crop&q=60" },
+            { id: 16, name: "Dress Floral Kasual Wanita", price: 189000, description: "Bahan rayon adem dengan motif bunga yang anggun untuk jalan-jalan sore.", category: "Pakaian", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&auto=format&fit=crop&q=60" },
+            { id: 17, name: "Sweater Rajut Halus", price: 165000, description: "Rajutan benang akrilik halus premium yang elegan untuk dipakai bepergian.", category: "Pakaian", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=500&auto=format&fit=crop&q=60" },
+            { id: 18, name: "Celana Pendek Cargo Santai", price: 135000, description: "Serbaguna dengan banyak saku penyimpanan untuk menaruh dompet dan HP.", category: "Pakaian", image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&auto=format&fit=crop&q=60" },
+            { id: 19, name: "Blouse Wanita Minimalis", price: 155000, description: "Blouse lengan panjang elegan yang cocok dipadukan dengan hijab atau rok kantor.", category: "Pakaian", image: "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?w=500&auto=format&fit=crop&q=60" },
+            { id: 20, name: "Cardigan Outer Santai", price: 140000, description: "Outerwear modis tanpa kancing yang mempercantik pakaian sehari-hari Anda.", category: "Pakaian", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60" },
+
+            // SEPATU (10)
+            { id: 21, name: "Sneakers Aero Comfort", price: 380000, description: "Ringan digunakan untuk melangkah sepanjang hari tanpa membuat kaki pegal.", category: "Sepatu", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" },
+            { id: 22, name: "Running Shoes Storm Runner", price: 520000, description: "Teknologi sol busa responsif peredam benturan saat berlari jarak jauh.", category: "Sepatu", image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&auto=format&fit=crop&q=60" },
+            { id: 23, name: "Leather Loafers Classic Brown", price: 680000, description: "Kulit sintetis mengkilap berkualitas tinggi untuk penampilan maskulin.", category: "Sepatu", image: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=500&auto=format&fit=crop&q=60" },
+            { id: 24, name: "Sepatu Slip On Kasual", price: 190000, description: "Gampang dipakai, praktis, dan serasi untuk dipadukan dengan segala gaya santai.", category: "Sepatu", image: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&auto=format&fit=crop&q=60" },
+            { id: 25, name: "Boots Kulit Sintetis Vintage", price: 750000, description: "Desain gagah nan tangguh dengan sol karet anti-selip di medan licin.", category: "Sepatu", image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=500&auto=format&fit=crop&q=60" },
+            { id: 26, name: "Sepatu Hak Tinggi Heelys", price: 410000, description: "Tumit 5cm kokoh penunjang rasa percaya diri dalam acara pesta formal.", category: "Sepatu", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60" },
+            { id: 27, name: "Sandal Gunung Adventure", price: 185000, description: "Tali kanvas kuat dan sol anti-licin yang siap menemani mendaki bukit.", category: "Sepatu", image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=500&auto=format&fit=crop&q=60" },
+            { id: 28, name: "Sneakers Retro Classic", price: 340000, description: "Gaya vintage ala 90-an yang sedang digemari remaja masa kini.", category: "Sepatu", image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&auto=format&fit=crop&q=60" },
+            { id: 29, name: "Sandal Rumah Busa Empuk", price: 750000, description: "Bahan busa super tebal yang memanjakan tumit kaki Anda di dalam rumah.", category: "Sepatu", image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&auto=format&fit=crop&q=60" },
+            { id: 30, name: "Kets Kanvas Modern", price: 210000, description: "Kanvas berkualitas tinggi sirkulasi udara optimal sehingga kaki tidak bau.", category: "Sepatu", image: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=500&auto=format&fit=crop&q=60" },
+
+            // AKSESORIS (10)
+            { id: 31, name: "Kacamata Hitam Aviator", price: 150000, description: "Lensa UV400 pelindung terik matahari sekaligus menambah gaya liburan Anda.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60" },
+            { id: 32, name: "Jam Tangan Quartz Leather", price: 450000, description: "Mesin jam andal buatan Jepang dipadu dengan strap kulit asli berkualitas.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&auto=format&fit=crop&q=60" },
+            { id: 33, name: "Topi Baseball Polos Klasik", price: 650000, description: "Bahan katun tebal dengan strap pengatur yang pas untuk lingkar kepala Anda.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&auto=format&fit=crop&q=60" },
+            { id: 34, name: "Tas Ransel Laptop Waterproof", price: 320000, description: "Dilengkapi port USB pengisian daya dan sekat laptop khusus berbusa tebal.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=60" },
+            { id: 35, name: "Dompet Kulit Lipat Bifold", price: 210000, description: "Banyak slot kartu fungsional dan tempat uang kertas tanpa membuat kantong tebal.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1627124118303-192c8466b04e?w=500&auto=format&fit=crop&q=60" },
+            { id: 36, name: "Ikat Pinggang Kulit Otomatis", price: 175000, description: "Kepala gesper stainless anti-karat dengan sistem kunci rel otomatis praktis.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1624222247344-550fb805296f?w=500&auto=format&fit=crop&q=60" },
+            { id: 37, name: "Gelang Tali Etnik Minimalis", price: 50000, description: "Dibuat langsung secara handmade menggunakan serat alam tahan air.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&auto=format&fit=crop&q=60" },
+            { id: 38, name: "Kalung Titanium Anti Karat", price: 99000, description: "Panjang 50cm dengan rantai kokoh tidak gatal di leher sensitif sekalipun.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60" },
+            { id: 39, name: "Tas Selempang Sling Bag Mini", price: 145000, description: "Ringkas untuk menyimpan barang penting seperti kunci mobil, dompet, dan HP.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=500&auto=format&fit=crop&q=60" },
+            { id: 40, name: "Syall Scarf Motif Silk", price: 85000, description: "Lembut mengkilap layaknya sutra untuk menghangatkan leher saat formal.", category: "Aksesoris", image: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e?w=500&auto=format&fit=crop&q=60" },
+
+            // PERALATAN RUMAH (10)
+            { id: 41, name: "Teko Listrik Pemanas Air 1.5L", price: 185000, description: "Merebus air instan kurang dari 5 menit dilengkapi fitur otomatis mati sendiri.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&auto=format&fit=crop&q=60" },
+            { id: 42, name: "Blender Juicer Portabel USB", price: 145000, description: "Membuat jus segar di mana pun Anda berada dengan pengisian daya kabel tipe-C.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1578643463396-0997cb5328c1?w=500&auto=format&fit=crop&q=60" },
+            { id: 43, name: "Air Fryer Hemat Listrik", price: 699000, description: "Menggoreng makanan sehat renyah tanpa minyak menggunakan sirkulasi udara panas.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?w=500&auto=format&fit=crop&q=60" },
+            { id: 44, name: "Set Pisau Dapur Keramik", price: 125000, description: "Terdiri dari 5 macam pisau super tajam dengan talenan anti bakteri.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1593113630400-ea4288922497?w=500&auto=format&fit=crop&q=60" },
+            { id: 45, name: "Wajan Teflon Anti Lengket 24cm", price: 160000, description: "Dilapisi lapisan maifan stone bebas bahan kimia berbahaya mudah dibersihkan.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=500&auto=format&fit=crop&q=60" },
+            { id: 46, name: "Botol Minum Termos Vacuum Flask", price: 95000, description: "Menjaga suhu panas dan dingin minuman favorit Anda sampai dengan 12 jam.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60" },
+            { id: 47, name: "Lampu Meja Estetik Kayu", price: 135000, description: "Lampu redup hiasan kamar bernuansa kayu minimalis skandinavia yang hangat.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop&q=60" },
+            { id: 48, name: "Humidifier Ruangan Aromaterapi", price: 155000, description: "Menguapkan aroma terapi segar yang menenangkan setelah seharian lelah bekerja.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=500&auto=format&fit=crop&q=60" },
+            { id: 49, name: "Organizer Wadah Kulkas Set", price: 89000, description: "Menata isi lemari es jauh lebih rapi dan menjamin sayur buah tetap segar higienis.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=500&auto=format&fit=crop&q=60" },
+            { id: 50, name: "Rak Sepatu Bongkar Pasang 5 Tingkat", price: 110000, description: "Kapasitas muatan hingga 15 pasang sepatu dengan struktur pipa besi kokoh.", category: "Peralatan Rumah", image: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=500&auto=format&fit=crop&q=60" }
+        ];
+
+        // State management
+        let cart = [];
+        let activeFilters = {
+            search: '',
+            category: 'all',
+            maxPrice: 15000000,
+            sortBy: 'none'
+        };
+
+        // DOM elements
+        const productsGrid = document.getElementById('productsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const priceRange = document.getElementById('priceRange');
+        const priceRangeValue = document.getElementById('priceRangeValue');
+        const sortFilter = document.getElementById('sortFilter');
+        const btnResetFilters = document.getElementById('btnResetFilters');
+        const activeFiltersLabel = document.getElementById('activeFiltersLabel');
+        const productCounter = document.getElementById('productCounter');
+        
+        const cartCountBadge = document.getElementById('cartCountBadge');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const emptyCartState = document.getElementById('emptyCartState');
+        const cartTotalPrice = document.getElementById('cartTotalPrice');
+        const btnCheckout = document.getElementById('btnCheckout');
+
+        // Format Rupiah helper
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
+
+        // Main filtering and rendering logic
+        function updateAndRender() {
+            // Apply filtering logic
+            let displayProducts = products.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(activeFilters.search.toLowerCase()) || 
+                                     product.description.toLowerCase().includes(activeFilters.search.toLowerCase());
+                const matchesCategory = activeFilters.category === 'all' || product.category === activeFilters.category;
+                const matchesPrice = product.price <= activeFilters.maxPrice;
+                
+                return matchesSearch && matchesCategory && matchesPrice;
+            });
+
+            // Apply sorting logic
+            if (activeFilters.sortBy === 'low-to-high') {
+                displayProducts.sort((a, b) => a.price - b.price);
+            } else if (activeFilters.sortBy === 'high-to-low') {
+                displayProducts.sort((a, b) => b.price - a.price);
+            }
+
+            // Update UI Counters
+            productCounter.textContent = displayProducts.length;
+
+            // Render products
+            if (displayProducts.length === 0) {
+                productsGrid.innerHTML = '';
+                emptyState.classList.remove('d-none');
+            } else {
+                emptyState.classList.add('d-none');
+                
+                let htmlContent = '';
+                displayProducts.forEach(product => {
+                    htmlContent += `
+                        <div class="col">
+                            <div class="product-card">
+                                <div class="product-img-wrapper">
+                                    <span class="category-badge">${product.category}</span>
+                                    <img 
+                                        src="${product.image}" 
+                                        alt="${product.name}" 
+                                        class="product-img" 
+                                        onerror="this.onerror=null;this.src='https://placehold.co/400x400/e9ecef/495057?text=Gambar+Produk';"
+                                    >
+                                </div>
+                                <div class="card-body p-3 d-flex flex-column">
+                                    <h6 class="card-title fw-bold text-dark mb-1 text-truncate" title="${product.name}">${product.name}</h6>
+                                    <p class="card-text text-muted small mb-2 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px;">
+                                        ${product.description}
+                                    </p>
+                                    <div class="mt-auto">
+                                        <div class="price-text mb-2">${formatRupiah(product.price)}</div>
+                                        <button class="btn btn-primary w-100 rounded-pill btn-sm py-2 fw-semibold shadow-sm" onclick="addToCart(${product.id})">
+                                            <i class="bi bi-cart-plus me-1"></i> Beli Sekarang
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                productsGrid.innerHTML = htmlContent;
+            }
+
+            // Update labels describing current filter state
+            let labels = [];
+            if (activeFilters.search) labels.push(`"${activeFilters.search}"`);
+            if (activeFilters.category !== 'all') labels.push(`Kategori: ${activeFilters.category}`);
+            if (activeFilters.maxPrice < 15000000) labels.push(`Harga &le; ${formatRupiah(activeFilters.maxPrice)}`);
+            
+            if (labels.length > 0) {
+                activeFiltersLabel.innerHTML = `Filter aktif: ${labels.join(' + ')}`;
+            } else {
+                activeFiltersLabel.textContent = 'Menampilkan Semua Produk';
+            }
+        }
+
+        // Cart functions
+        window.addToCart = function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.product.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ product, quantity: 1 });
+            }
+
+            updateCartUI();
+
+            // Show Toast feedback
+            const toastElement = document.getElementById('cartToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        };
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.product.id !== productId);
+            updateCartUI();
+        }
+
+        function updateQuantity(productId, delta) {
+            const item = cart.find(item => item.product.id === productId);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            // Count total items
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountBadge.textContent = totalCount;
+
+            // Render list
+            if (cart.length === 0) {
+                emptyCartState.classList.remove('d-none');
+                cartItemsList.innerHTML = '';
+                cartTotalPrice.textContent = formatRupiah(0);
+                btnCheckout.disabled = true;
+            } else {
+                emptyCartState.classList.add('d-none');
+                btnCheckout.disabled = false;
+
+                let cartHtml = '';
+                let grandTotal = 0;
+
+                cart.forEach(item => {
+                    const totalItemPrice = item.product.price * item.quantity;
+                    grandTotal += totalItemPrice;
+
+                    cartHtml += `
+                        <div class="card border-0 bg-light p-3 rounded-3 shadow-sm">
+                            <div class="row align-items-center g-3">
+                                <div class="col-3 col-sm-2">
+                                    <img src="${item.product.image}" class="img-fluid rounded-3" alt="${item.product.name}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e9ecef/495057?text=Item';">
+                                </div>
+                                <div class="col-9 col-sm-5">
+                                    <h6 class="fw-bold mb-1 text-truncate">${item.product.name}</h6>
+                                    <small class="text-muted d-block mb-1">Harga: ${formatRupiah(item.product.price)}</small>
+                                    <small class="text-primary fw-semibold">${item.product.category}</small>
+                                </div>
+                                <div class="col-6 col-sm-3 d-flex align-items-center justify-content-sm-center">
+                                    <button class="btn btn-sm btn-outline-secondary rounded-circle px-2" onclick="updateQuantity(${item.product.id}, -1)">
+                                        <i class="bi bi-dash-lg"></i>
+                                    </button>
+                                    <span class="mx-3 fw-bold">${item.quantity}</span>
+                                    <button class="btn btn-sm btn-outline-secondary rounded-circle px-2" onclick="updateQuantity(${item.product.id}, 1)">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-sm-2 text-end">
+                                    <div class="fw-bold text-success mb-2">${formatRupiah(totalItemPrice)}</div>
+                                    <button class="btn btn-sm btn-link text-danger p-0" onclick="removeFromCart(${item.product.id})">
+                                        <i class="bi bi-trash-fill"></i> Hapus
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                cartItemsList.innerHTML = cartHtml;
+                cartTotalPrice.textContent = formatRupiah(grandTotal);
+            }
+        }
+
+        // Set up Listeners for Filters
+        searchInput.addEventListener('input', (e) => {
+            activeFilters.search = e.target.value;
+            updateAndRender();
+        });
+
+        categoryFilter.addEventListener('change', (e) => {
+            activeFilters.category = e.target.value;
+            updateAndRender();
+        });
+
+        priceRange.addEventListener('input', (e) => {
+            activeFilters.maxPrice = parseInt(e.target.value);
+            priceRangeValue.textContent = formatRupiah(activeFilters.maxPrice);
+            updateAndRender();
+        });
+
+        sortFilter.addEventListener('change', (e) => {
+            activeFilters.sortBy = e.target.value;
+            updateAndRender();
+        });
+
+        // Reset Filters Button
+        btnResetFilters.addEventListener('click', () => {
+            searchInput.value = '';
+            categoryFilter.value = 'all';
+            priceRange.value = 15000000;
+            priceRangeValue.textContent = formatRupiah(15000000);
+            sortFilter.value = 'none';
+
+            activeFilters = {
+                search: '',
+                category: 'all',
+                maxPrice: 15000000,
+                sortBy: 'none'
+            };
+
+            updateAndRender();
+        });
+
+        // Checkout Button Action
+        btnCheckout.addEventListener('click', () => {
+            // Close Cart Modal
+            const cartModalEl = document.getElementById('cartModal');
+            const modal = bootstrap.Modal.getInstance(cartModalEl);
+            if (modal) {
+                modal.hide();
+            }
+
+            // Clear Cart State
+            cart = [];
+            updateCartUI();
+
+            // Show Success Notification
+            const checkoutToastEl = document.getElementById('checkoutToast');
+            const toast = new bootstrap.Toast(checkoutToastEl);
+            toast.show();
+        });
+
+        // On Page Load
+        window.onload = function() {
+            // Initialize slider text
+            priceRangeValue.textContent = formatRupiah(priceRange.value);
+            // Render all products
+            updateAndRender();
+            // Ensure cart matches initial empty array
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
