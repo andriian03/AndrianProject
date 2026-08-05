@@ -49,8 +49,8 @@ unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old_input']);
                         </div>
                     <?php endif; ?>
 
-                    <!-- Form dihubungkan langsung ke Proses_Produk.php -->
-                    <form action="Proses_Produk.php" method="POST" novalidate>
+<!-- Form dihubungkan langsung ke Proses_Produk.php -->
+<form action="Proses_Produk.php" method="POST" novalidate>
                         
                         <!-- Nama Produk -->
                         <div class="mb-3">
@@ -73,7 +73,6 @@ unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old_input']);
                                    placeholder="Contoh: Pakaian / Aksesoris"
                                    value="<?= htmlspecialchars($old_input['kategori'] ?? '') ?>">
                         </div>
-
                         <!-- Harga & Stock -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
