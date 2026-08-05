@@ -1,5 +1,5 @@
 <?php
-$page_title = "Tambah Produk - WebDev App";
+$page_title = "Tambah Produk - AADIMAS";
 include_once '../template/Header.php';
 ?>
 <main class="container my-5">
