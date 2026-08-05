@@ -49,8 +49,8 @@ unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old_input']);
                         </div>
                     <?php endif; ?>
 
-                    <!-- Input Form (Aksi diarahkan ke proses.php) -->
-                    <form action="proses.php" method="POST" novalidate>
+<!-- Form dihubungkan langsung ke Proses_Produk.php -->
+<form action="Proses_Produk.php" method="POST" novalidate>
                         
                         <!-- Nama Produk -->
                         <div class="mb-3">
@@ -63,6 +63,16 @@ unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old_input']);
                                    value="<?= htmlspecialchars($old_input['nama_produk'] ?? '') ?>">
                         </div>
 
+                        <!-- Kategori Produk -->
+                        <div class="mb-3">
+                            <label for="kategori" class="form-label font-weight-bold">Kategori Produk <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="kategori" 
+                                   name="kategori" 
+                                   placeholder="Contoh: Pakaian / Aksesoris"
+                                   value="<?= htmlspecialchars($old_input['kategori'] ?? '') ?>">
+                        </div>
                         <!-- Harga & Stock -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -109,6 +119,6 @@ unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old_input']);
 </div>
 
 <!-- Bootstrap 5 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
