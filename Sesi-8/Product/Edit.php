@@ -14,7 +14,7 @@ if (!$product) {
     exit;
 }
 
-$page_title = "Edit Produk - AADIMAS";
+$page_title = "Edit Produk - WebDev App";
 include_once '../Template/Header.php';
 ?>
 <main class="container my-5">
@@ -29,7 +29,7 @@ include_once '../Template/Header.php';
             <?= htmlspecialchars($_GET['error']); ?>
         </div>
     <?php endif; ?>
-    <form action="db_action/Update.php" method="POST" enctype="multipart/form-data">
+    <form action="db_action/update.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']); ?>">
         <div class="mb-3">
             <label for="name" class="form-label">Nama Produk</label>
