@@ -1,5 +1,5 @@
 <?php
-$page_title = "Beranda - AADIMAS"; 
+$page_title = "Beranda - WebDev App"; 
 include_once '../template/Header.php';
 
 // show all products from the database in html table format
@@ -34,7 +34,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <main class="container my-5">
     <h1 class="mb-4">Daftar Produk</h1>
-    <a href="Create.php" class="btn btn-primary mb-3">Tambah Produk</a>
+    <a href="create.php" class="btn btn-primary mb-3">Tambah Produk</a>
     
     <!-- Search and filter form -->
     <form method="GET" class="mb-3">
@@ -88,8 +88,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><span class="badge bg-secondary"><?= htmlspecialchars($product['category']); ?></span></td>
                         <td>
                             <div class="d-grid gap-1 d-md-block">
-                                <a href="Edit.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="db_action/Delete.php" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+                                <a href="edit.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="db_action/delete.php" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                     <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']); ?>">
                                     <button type="submit" class="btn btn-sm btn-danger mt-1 mt-md-0">Hapus</button>
                                 </form>
